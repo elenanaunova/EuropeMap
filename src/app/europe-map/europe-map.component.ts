@@ -1,4 +1,5 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit, Input } from '@angular/core';
+import { marker, CapitalCity } from '../model';
 
 @Component({
   selector: 'europe-map',
@@ -6,6 +7,9 @@ import { Component, NgZone, OnInit } from '@angular/core';
   styleUrls: ['./europe-map.component.css']
 })
 export class EuropeMapComponent implements OnInit{
+  
+  @Input()
+  cityToGuess: CapitalCity;
 
   map: google.maps.Map;
   markers: marker[] = [];
@@ -110,7 +114,15 @@ export class EuropeMapComponent implements OnInit{
           lng: e.latLng.lng()
         };
         this.markers.push(selectedLocation);
+        this.showCorrectLocation();
       });
+    });
+  }
+
+  showCorrectLocation() {
+    this.markers.push({
+      lat: parseFloat(this.cityToGuess.lat),
+      lng: parseFloat(this.cityToGuess.long)
     });
   }
 
@@ -121,7 +133,3 @@ export class EuropeMapComponent implements OnInit{
   }
 }
 
-export interface marker {
-  lat: number;
-	lng: number;
-}
