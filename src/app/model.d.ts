@@ -9,3 +9,8 @@ export interface CapitalCity {
     lat: string;
     long: string;
 }
+
+export interface DialogData {
+    title: string;
+    content: string;
+}

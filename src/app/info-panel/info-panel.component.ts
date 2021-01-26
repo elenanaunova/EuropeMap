@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CapitalCity } from '../model';
+import { MatDialog } from '@angular/material/dialog';
+
+import { CapitalCity, DialogData } from '../model';
 import { DataService } from '../data-service.service';
+import { DistanceDialogComponent } from '../distance-dialog/distance-dialog.component';
 
 import * as cities from '../../assets/capitalCities.json';
 
@@ -16,8 +19,9 @@ export class InfoPanelComponent implements OnInit {
   cityToGuess: CapitalCity;
   capitalCities: CapitalCity[];
   isGameOver: boolean = false;
+  dialogData: DialogData;
 
-  constructor(private dataService: DataService) { 
+  constructor(private dataService: DataService, public dialog: MatDialog) { 
     this.correctCities = 0;
     this.kilometersLeft = 1500;
   }
@@ -46,12 +50,37 @@ export class InfoPanelComponent implements OnInit {
     if (pointsToDeduct <= 50) {
       this.correctCities += 1;
     }
+    this.setDialogData(pointsToDeduct);
     this.kilometersLeft -= pointsToDeduct;
+    this.openSelfClosingDialog();
     if (this.kilometersLeft <= 0) {
       this.kilometersLeft = 0;
       this.isGameOver = true;
     } else {
       this.pickRandomCity();
     }
+  }
+
+  setDialogData(pointsToDeduct: number) {
+    if (pointsToDeduct <= 50) {
+      this.dialogData = {
+        title: 'Correct!',
+        content: 'You are in 50km radius. Missed by ' + pointsToDeduct + ' kilometeres!'
+      };
+    } else {
+      this.dialogData = {
+        title: 'Sorry!',
+        content: 'You missed by ' + pointsToDeduct + ' kilometeres!'
+      };
+    }
+  }
+
+  openSelfClosingDialog() {
+    this.dialog.open(DistanceDialogComponent, {
+      data: this.dialogData
+    });
+    setTimeout(() => {
+      this.dialog.closeAll();
+    }, 1000);
   }
 }
