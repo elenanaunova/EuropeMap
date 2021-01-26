@@ -1,11 +1,7 @@
-<div *ngIf="!isGameOver">
-    <input type="text" readonly="true" value="{{correctCities}} cities placed">
-    <br/>
-    <input type="text" readonly="true" value="{{kilometersLeft}} km left">
-    <br/>
-    <h4>Select the location of {{cityToGuess?.capitalCity}}</h4>
-    
-    <europe-map [cityToGuess]="cityToGuess" (sendMissedDistance)="calculatePoints($event)"></europe-map>
-</div>
+<input type="text" readonly="true" value="{{correctCities}} cities placed">
+<br/>
+<input type="text" readonly="true" value="{{kilometersLeft}} km left">
+<br/>
+<h4>Select the location of {{cityToGuess?.capitalCity}}</h4>
 
-<leader-board *ngIf="isGameOver" [correctGuesses]="correctCities"></leader-board>
+<europe-map [cityToGuess]="cityToGuess" (sendMissedDistance)="calculatePoints($event)"></europe-map>

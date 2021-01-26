@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { CapitalCity, DialogData } from '../model';
 import { DataService } from '../data-service.service';
@@ -18,10 +19,9 @@ export class InfoPanelComponent implements OnInit {
   kilometersLeft: number;
   cityToGuess: CapitalCity;
   capitalCities: CapitalCity[];
-  isGameOver: boolean = false;
   dialogData: DialogData;
 
-  constructor(private dataService: DataService, public dialog: MatDialog) { 
+  constructor(private dataService: DataService, public dialog: MatDialog, private router: Router) { 
     this.correctCities = 0;
     this.kilometersLeft = 1500;
   }
@@ -52,13 +52,17 @@ export class InfoPanelComponent implements OnInit {
     }
     this.setDialogData(pointsToDeduct);
     this.kilometersLeft -= pointsToDeduct;
-    this.openSelfClosingDialog();
-    if (this.kilometersLeft <= 0) {
-      this.kilometersLeft = 0;
-      this.isGameOver = true;
-    } else {
-      this.pickRandomCity();
-    }
+    this.dialog.open(DistanceDialogComponent, {
+      data: this.dialogData
+    });
+    setTimeout(() => {
+      this.dialog.closeAll();
+      if (this.kilometersLeft <= 0) {
+        this.router.navigate(['/leader-board', this.correctCities]);
+      } else {
+        this.pickRandomCity();
+      }
+    }, 1000);    
   }
 
   setDialogData(pointsToDeduct: number) {
@@ -75,12 +79,4 @@ export class InfoPanelComponent implements OnInit {
     }
   }
 
-  openSelfClosingDialog() {
-    this.dialog.open(DistanceDialogComponent, {
-      data: this.dialogData
-    });
-    setTimeout(() => {
-      this.dialog.closeAll();
-    }, 1000);
-  }
 }

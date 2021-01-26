@@ -11,7 +11,7 @@
     </div>
   <br/>
     <button type="submit" [disabled]="userDataForm.invalid || submitted" class="btn btn-primary">Submit</button>
-    <button type="button" class="btn btn-primary">Play again!</button>
+    <button type="button" class="btn btn-primary" (click)="playAgain()">Play again!</button>
 </form>
 <table mat-table #table [dataSource]="users" class="mat-elevation-z8" style="width: 700px;">
 
