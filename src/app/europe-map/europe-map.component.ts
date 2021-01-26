@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit, Input } from '@angular/core';
+import { Component, NgZone, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { marker, CapitalCity } from '../model';
 
 @Component({
@@ -6,13 +6,17 @@ import { marker, CapitalCity } from '../model';
   templateUrl: './europe-map.component.html',
   styleUrls: ['./europe-map.component.css']
 })
-export class EuropeMapComponent implements OnInit{
+export class EuropeMapComponent implements OnChanges{
   
   @Input()
   cityToGuess: CapitalCity;
 
+  @Output()
+  sendMissedDistance = new EventEmitter<number>();
+
   map: google.maps.Map;
   markers: marker[] = [];
+  selectedLocation: marker
   mapClickListener: google.maps.MapsEventListener;
   customStyle: {}[] = [
     {
@@ -102,19 +106,20 @@ export class EuropeMapComponent implements OnInit{
 
   constructor(private zone: NgZone) {}
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    this.markers = [];
   }
 
   public mapReadyHandler(map: google.maps.Map): void {
     this.map = map;
     this.mapClickListener = this.map.addListener('click', (e: google.maps.MouseEvent) => {
       this.zone.run(() => {
-        let selectedLocation: marker= {
+        this.selectedLocation= {
           lat: e.latLng.lat(),
           lng: e.latLng.lng()
         };
-        this.markers.push(selectedLocation);
-        this.showCorrectLocation();
+        this.markers.push(this.selectedLocation);
+        this.calculateDistance();
       });
     });
   }
@@ -124,6 +129,14 @@ export class EuropeMapComponent implements OnInit{
       lat: parseFloat(this.cityToGuess.lat),
       lng: parseFloat(this.cityToGuess.long)
     });
+  }
+
+  calculateDistance() {
+    this.showCorrectLocation();
+    let guessedLocation = new google.maps.LatLng(this.selectedLocation.lat, this.selectedLocation.lng);
+    let rightLocation = new google.maps.LatLng(parseFloat(this.cityToGuess.lat), parseFloat(this.cityToGuess.long));
+    let distance = google.maps.geometry.spherical.computeDistanceBetween(guessedLocation, rightLocation)/1000;
+    this.sendMissedDistance.emit(Math.round(distance));
   }
 
   public ngOnDestroy(): void {

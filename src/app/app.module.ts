@@ -20,7 +20,8 @@ import { CapitalCityData } from './capital-city-data';
     BrowserModule,
     AppRoutingModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBMZxNTjb6j2rKozv6YfHLzdM7j96ZpHsw'
+      apiKey: 'AIzaSyBMZxNTjb6j2rKozv6YfHLzdM7j96ZpHsw',
+      libraries: ['geometry']
     }),
     InMemoryWebApiModule.forRoot(CapitalCityData),
     HttpClientModule

@@ -15,6 +15,7 @@ export class InfoPanelComponent implements OnInit {
   kilometersLeft: number;
   cityToGuess: CapitalCity;
   capitalCities: CapitalCity[];
+  isGameOver: boolean = false;
 
   constructor(private dataService: DataService) { 
     this.correctCities = 0;
@@ -39,5 +40,18 @@ export class InfoPanelComponent implements OnInit {
     return this.dataService.getCity(cityName).subscribe((data) => {
       this.cityToGuess = data;
     });
+  }
+
+  calculatePoints(pointsToDeduct: number) {
+    if (pointsToDeduct <= 50) {
+      this.correctCities += 1;
+    }
+    this.kilometersLeft -= pointsToDeduct;
+    if (this.kilometersLeft <= 0) {
+      this.kilometersLeft = 0;
+      this.isGameOver = true;
+    } else {
+      this.pickRandomCity();
+    }
   }
 }
