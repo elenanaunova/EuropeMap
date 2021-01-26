@@ -1,0 +1,7 @@
+<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [restriction]="europeRestriction" 
+        [styles]="customStyle" [scrollwheel]="false" [disableDefaultUI]="true" [draggableCursor]="'auto;'" 
+        (mapReady)="mapReadyHandler($event)">
+    <agm-zoom-control></agm-zoom-control>
+    <agm-marker *ngFor="let marker of markers" [latitude]="marker?.lat" [longitude]="marker?.lng">
+    </agm-marker>
+</agm-map>
