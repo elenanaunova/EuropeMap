@@ -1,0 +1,35 @@
+<h2>Leaderboard - Top 10</h2>
+<form [formGroup]="userDataForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input formControlName="name" type="text" class="form-control" id="name" pattern="[a-zA-Z0-9 ]*" placeholder="Insert name">
+         <small *ngIf="userDataForm.get('name').hasError('required')" class="form-text text-danger">Name is required. Only letters, numbers and space is allowed.</small>
+    </div>
+    <div class="form-group">
+        <label for="score">Score</label>
+        <input id="score" type="text" readonly="true" value="{{correctGuesses}}">
+    </div>
+  <br/>
+    <button type="submit" [disabled]="userDataForm.invalid || submitted" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-primary">Play again!</button>
+</form>
+<table mat-table #table [dataSource]="users" class="mat-elevation-z8" style="width: 700px;">
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> # </th>
+    <td mat-cell *matCellDef="let element; let i = index;"> {{i + 1}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="score">
+    <th mat-header-cell *matHeaderCellDef> Score </th>
+    <td mat-cell *matCellDef="let element"> {{element.score}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

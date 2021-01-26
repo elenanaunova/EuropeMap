@@ -14,3 +14,8 @@ export interface DialogData {
     title: string;
     content: string;
 }
+
+export interface UserData {
+    name: string;
+    score: number;
+}
